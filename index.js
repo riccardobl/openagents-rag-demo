@@ -29,7 +29,7 @@ FULLY QUALIFIED QUESTION: `;
 
 
 const DOCUMENTS = [
-    ""
+    "https://livewire.laravel.com/docs/quickstart"
 ];
 /////////////////////////////////////////
 
@@ -149,6 +149,7 @@ async function main(){
             continue;
         }else if(input==="q"){ // quit
             console.info("Goodbye!");
+            process.exit(0);
             break;
         }else{ // user input
             userInput(input);

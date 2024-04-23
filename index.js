@@ -204,7 +204,7 @@ async function main(){
         assistantResponse(response);
         log("Final chat history: \n", JSON.stringify(CHAT_HISTORY, null, 2));
 
-
+        console.log("");
         // Go back to the top of the loop        
     }
 }

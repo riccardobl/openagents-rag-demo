@@ -98,7 +98,7 @@ const getRAGEvent = (question)=>{
             ["param","main","https://github.com/riccardobl/openagents-rag-coordinator-plugin/raw/master/rag.wasm"],
             ["param","k","3"],
             ["param","max-tokens","256"],
-            ["param","quantize","true"],
+            ["param","quantize","false"],
             ...DOCUMENTS.map((doc) => ["i", doc, "url", "", "passage"]),
             ["i",question, "text", "", "query"]
         ],

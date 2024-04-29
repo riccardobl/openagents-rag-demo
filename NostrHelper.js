@@ -11,20 +11,25 @@ async function decryptEvent(event, secret) {
         const kind = event.kind;
         if (kind >= 5000 && kind < 6000) { // job request
             const encryptedPayload = event.content;
-            const decryptedPayload = await nip04.decrypt(secret, event.pubkey, encryptedPayload);
-            const decryptedTags = JSON.parse(decryptedPayload);
-            event.tags.push(...decryptedTags);
+            if (encryptedPayload) {
+                const decryptedPayload = await nip04.decrypt(secret, event.pubkey, encryptedPayload);
+                const decryptedTags = JSON.parse(decryptedPayload);
+                event.tags.push(...decryptedTags);
+            }
         } else if (kind >= 6000 && kind <= 6999) { // job response
             const encryptedPayload = event.content;
-            const decryptedPayload = await nip04.decrypt(secret, event.pubkey, encryptedPayload);
-            event.content = decryptedPayload;
+            if (encryptedPayload) {
+                const decryptedPayload = await nip04.decrypt(secret, event.pubkey, encryptedPayload);
+                event.content = decryptedPayload;
+            }
         } else if (kind == 7000) {
             const encryptedPayload = event.content;
-            const decryptedPayload = await nip04.decrypt(secret, event.pubkey, encryptedPayload);
-            event.content = decryptedPayload;
+            if (encryptedPayload) {
+                const decryptedPayload = await nip04.decrypt(secret, event.pubkey, encryptedPayload);
+                event.content = decryptedPayload;
+            }
         }
     } catch (e) {
-        console.error(e);
     }
     return event;
 }
@@ -93,6 +98,7 @@ async function encryptEvent(event, secret) {
 export async function runJobAndWait(eventReq, log=()=>{}, encryptFor = "") {
     // Initialize nostr if not already done
     if (!context.nostrPool) {
+        console.log("Connect to relays", context.nostrRelays);
         context.nostrPool = new SimplePool();
         context.nostrPrivateKey = generateSecretKey();
         context.nostrPool.subscribeMany(context.nostrRelays, [

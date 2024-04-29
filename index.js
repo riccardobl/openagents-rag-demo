@@ -95,7 +95,7 @@ const getRAGEvent = (question="", warmUp=false) => {
         "tags": [
             ["param", "run-on", "openagents/extism-runtime"],
             ["expiration", "" + Math.floor((Date.now() + 1000 * 60 * 60) / 1000)],
-            ["param", "main", "https://github.com/riccardobl/openagents-rag-coordinator-plugin/raw/master/rag.wasm"],
+            ["param", "main", "https://github.com/OpenAgentsInc/openagents-rag-coordinator-plugin/releases/download/v0.2/rag.wasm"],
             ["param", "k", "3"],
             ["param", "max-tokens", "256"],
             ["param", "quantize", "false"],
@@ -110,7 +110,8 @@ const getRAGEvent = (question="", warmUp=false) => {
 
 
 // specify provider to encrypt traffic
-const PROVIDER = ""
+let PROVIDER = ""
+const OA_POOL_PROVIDER ="a6caebb39caea156dc031b1c56d336f9a053ea69de2a654a0f4181d7047bfc7d";
 
 
 
@@ -118,7 +119,7 @@ const PROVIDER = ""
 async function main() {
     try {
         // Print welcome message
-        console.info(WELCOME_MESSAGE + "\n   Enter d for debug mode.\n   Enter q to exit.\n   Enter w to pre-warm the dataset.")
+        console.info(WELCOME_MESSAGE + "\n   Enter d for debug mode.\n   Enter q to exit.\n   Enter w to pre-warm the dataset.\n   Enter e to toggle encryption (off by default)")
 
         let DEBUG_MODE = false; // a toggle for debug mode (shows all system logging)
         let CONTEXT = ""; // this variable holds the last context
@@ -156,6 +157,15 @@ async function main() {
                 console.info("Goodbye!");
                 process.exit(0);
                 break;
+            } else if(input==="e"){
+                if(PROVIDER===""){
+                    console.info("Select OpenAgents provider and enable encryption");
+                    PROVIDER=OA_POOL_PROVIDER;
+                }else{
+                    console.info("Encryption and provider selection disabled");
+                    PROVIDER="";
+                }
+                continue;
             } else if(input==="w"){
                 console.info("Pre-warming the dataset... Please wait...");
                 const ragEvent = getRAGEvent("", true);
